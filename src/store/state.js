@@ -1,3 +1,13 @@
 export default {
-	count: 0,
+	diaries: [
+		{
+			name: "Contexte (OPTIONNEL)",
+			content: "Bla bla bla",
+		},
+		{
+			name: "Matériel",
+			content: "Bla différent bla",
+		},
+	],
+	currentDiary: null,
 };

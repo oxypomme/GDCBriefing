@@ -1,23 +1,18 @@
 <template>
-	<div id="app">
-		<img src="./assets/logo.png" />
-		<div>
-			<n-button>naive-ui</n-button>
-		</div>
-	</div>
+	<n-layout has-sider>
+		<n-layout-sider bordered height="100%">
+			<DiaryRecords />
+		</n-layout-sider>
+		<n-layout>
+			<ContentEditor />
+			<SQFEditor />
+		</n-layout>
+	</n-layout>
 </template>
 
 <script>
-export default {};
+import DiaryRecords from "./components/DiaryRecords.vue";
+import ContentEditor from "./components/ContentEditor.vue";
+import SQFEditor from "./components/SQFEditor.vue";
+export default { components: { DiaryRecords, ContentEditor, SQFEditor } };
 </script>
-
-<style>
-#app {
-	font-family: "Avenir", Helvetica, Arial, sans-serif;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	text-align: center;
-	color: #2c3e50;
-	margin-top: 60px;
-}
-</style>
