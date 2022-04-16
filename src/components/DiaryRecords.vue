@@ -6,14 +6,15 @@
 	/>
 </template>
 
-<script>
-import { NIcon } from "naive-ui";
-import { computed, defineComponent, h } from "vue";
-import { useStore } from "vuex";
+<script lang="ts">
+import { Diary, useStore } from "@/store";
 import { FileAltRegular } from "@vicons/fa";
+import { NIcon } from "naive-ui";
+import { Component, computed, defineComponent, h } from "vue";
 import DiaryLabel from "./DiaryLabel.vue";
 
-const renderIcon = (icon) => () => h(NIcon, null, { default: () => h(icon) });
+const renderIcon = (icon: Component) => () =>
+	h(NIcon, null, { default: () => h(icon) });
 
 export default defineComponent({
 	setup: () => {
@@ -21,7 +22,7 @@ export default defineComponent({
 		return {
 			// Computed
 			diaries: computed(() =>
-				store.getters.getDiariesList.map((d) => ({
+				store.getters.getDiariesList.map((d: Diary) => ({
 					...d,
 					icon: renderIcon(FileAltRegular),
 					label: () =>
@@ -32,7 +33,7 @@ export default defineComponent({
 			),
 			currentDiary: computed(() => store.getters.getCurrentDiary),
 			// Methods
-			onDiarySelected: (key) => {
+			onDiarySelected: (key: number) => {
 				store.commit("setCurrentDiary", { key });
 			},
 		};

@@ -1,3 +1,6 @@
+import type Delta from "quill-delta";
+import type AttributeMap from "quill-delta/dist/AttributeMap";
+
 /**
  * Prepare various attributes for XML parsing
  *
@@ -12,8 +15,8 @@
  * @param {object} attributes The attributes
  * @returns The object
  */
-const parseAttributes = (attributes) => {
-	const tags = {};
+const parseAttributes = (attributes: AttributeMap) => {
+	const tags: Record<string, Record<string, string | number>> = {};
 	// Parsing color
 	if (attributes.color) {
 		tags.font = {
@@ -49,12 +52,16 @@ const parseAttributes = (attributes) => {
 /**
  * Parse JS Object into a XML tag
  *
- * @param {string} name The name of the tag
- * @param {Record<string, string|number>} attributes The atttributes of the tag
- * @param {string|number} [content] The content of the tag
+ * @param name The name of the tag
+ * @param attributes The atttributes of the tag
+ * @param content The content of the tag
  * @returns The XML tag
  */
-const renderXMLTag = (name, attributes, content) => {
+const renderXMLTag = (
+	name: string,
+	attributes: Record<string, string | number>,
+	content?: string | number
+) => {
 	// Keeping the start of the tag (eg: <font) to put it at the end of the string
 	const xmlName = "<" + name;
 	let xmlStart = xmlName;
@@ -72,29 +79,37 @@ const renderXMLTag = (name, attributes, content) => {
 /**
  * Parse Quill Delta into a createDiaryRecord.
  *
- * @param {string} name The Diary name
- * @param {Delta} delta
+ * @param name The Diary name
+ * @param delta
  * @returns The formatted SQF
  */
-export const toSQF = (name, delta) => {
+export const toSQF = (name: string, delta: Delta) => {
 	let sqf = `player createDiaryRecord ["Diary", ["${name}", "`;
 
 	if (delta?.ops) {
 		for (let i = 0; i < delta.ops.length; i++) {
-			let { insert, attributes } = delta.ops[i];
-
-			if (!attributes?.header) {
-				insert = insert.replaceAll("\n", "\n<br/>");
-			}
-
-			if (attributes) {
-				const tags = parseAttributes(attributes);
-
-				for (const [key, attrs] of Object.entries(tags)) {
-					insert = renderXMLTag(key, attrs, insert);
+			const { insert, attributes } = delta.ops[i];
+			let data = insert;
+			if (typeof data === "string") {
+				if (!attributes?.header) {
+					data = data.replaceAll("\n", "\n<br/>");
 				}
+
+				if (attributes) {
+					const tags = parseAttributes(attributes);
+
+					for (const [key, attrs] of Object.entries(tags)) {
+						data = renderXMLTag(key, attrs, data);
+					}
+				}
+				sqf += insert;
+			} else {
+				console.error(
+					"Type of insert: %s (value: %s)",
+					typeof insert,
+					JSON.stringify(insert)
+				);
 			}
-			sqf += insert;
 		}
 		// Removing last \n
 		sqf = sqf.replace(/\n<br\/>$/, "");

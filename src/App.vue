@@ -19,15 +19,14 @@
 	</n-config-provider>
 </template>
 
-<script>
-import DiaryRecords from "./components/DiaryRecords.vue";
-import ContentEditor from "./components/ContentEditor.vue";
-import SQFView from "./components/SQFView.vue";
-import { defineComponent } from "vue";
-
+<script lang="ts">
 import hljs from "highlight.js/lib/core";
 import sqf from "highlight.js/lib/languages/sqf";
+import { defineComponent } from "vue";
 import AddDiaryButton from "./components/AddDiaryButton.vue";
+import ContentEditor from "./components/ContentEditor.vue";
+import DiaryRecords from "./components/DiaryRecords.vue";
+import SQFView from "./components/SQFView.vue";
 
 hljs.registerLanguage("sqf", sqf);
 

@@ -2,10 +2,11 @@
 	<quill-editor v-model:content="content" :options="options"></quill-editor>
 </template>
 
-<script>
+<script lang="ts">
+import { State, useStore } from "@/store";
 import { debounce } from "lodash";
-import { ref, defineComponent, watch, computed } from "vue";
-import { useStore } from "vuex";
+import { computed, defineComponent, ref, watch } from "vue";
+import type { Store } from "vuex";
 
 // quill options
 const options = {
@@ -19,7 +20,7 @@ const options = {
 	},
 };
 
-let store;
+let store: Store<State>;
 const updateStore = debounce((key, value) => {
 	store?.commit("setDiaryContent", {
 		key,

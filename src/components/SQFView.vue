@@ -2,9 +2,9 @@
 	<n-code style="flex: 1" :code="sqf" language="sqf" />
 </template>
 
-<script>
+<script lang="ts">
+import { useStore } from "@/store";
 import { computed, defineComponent } from "vue";
-import { useStore } from "vuex";
 
 export default defineComponent({
 	setup: () => {

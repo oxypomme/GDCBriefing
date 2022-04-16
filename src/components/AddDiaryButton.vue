@@ -9,9 +9,9 @@
 	</n-button>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script lang="ts">
 import { Plus } from "@vicons/fa";
+import { defineComponent } from "vue";
 
 export default defineComponent({
 	components: {

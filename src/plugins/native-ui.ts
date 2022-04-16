@@ -1,16 +1,16 @@
 import {
 	create,
 	NButton,
+	NCode,
+	NConfigProvider,
 	NIcon,
 	NInput,
 	NInputGroup,
 	NLayout,
 	NLayoutSider,
 	NMenu,
-	NTabs,
 	NTabPane,
-	NCode,
-	NConfigProvider,
+	NTabs,
 } from "naive-ui";
 
 const components = [

@@ -9,13 +9,14 @@
 	</n-input-group>
 </template>
 
-<script>
-import { defineComponent, ref } from "vue";
-import { debounce } from "lodash";
-import { useStore } from "vuex";
+<script lang="ts">
+import { State, useStore } from "@/store";
 import { TrashAlt } from "@vicons/fa";
+import { debounce } from "lodash";
+import { defineComponent, ref } from "vue";
+import type { Store } from "vuex";
 
-let store;
+let store: Store<State>;
 const updateStore = debounce((key, value) => {
 	store?.commit("setDiaryName", {
 		key,
@@ -32,18 +33,22 @@ export default defineComponent({
 	},
 	setup: (props) => {
 		store = useStore();
-		const content = ref(props.diary.name);
+		const content = ref(props?.diary?.name);
 
 		return {
 			// Data
 			content,
 			// Methods
-			onContentChange: (val) => {
-				content.value = val;
-				updateStore(props.diary.key, content.value);
+			onContentChange: (val: string) => {
+				if (props?.diary) {
+					content.value = val;
+					updateStore(props.diary.key, content.value);
+				}
 			},
 			onDeletePressed: () => {
-				store.commit("deleteDiary", { key: props.diary.key });
+				if (props?.diary) {
+					store.commit("deleteDiary", { key: props.diary.key });
+				}
 			},
 		};
 	},
