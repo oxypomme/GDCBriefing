@@ -17,6 +17,7 @@ export default {
 	addDiary(state) {
 		const index = state.diaries.length;
 		state.diaries.push({
+			key: index,
 			name: `Entrée ${index}`,
 			content: "",
 		});

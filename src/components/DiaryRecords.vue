@@ -16,7 +16,7 @@ import DiaryLabel from "./DiaryLabel.vue";
 const renderIcon = (icon) => () => h(NIcon, null, { default: () => h(icon) });
 
 export default defineComponent({
-	setup() {
+	setup: () => {
 		const store = useStore();
 		return {
 			// Computed

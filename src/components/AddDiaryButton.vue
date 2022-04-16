@@ -17,10 +17,8 @@ export default defineComponent({
 	components: {
 		Plus,
 	},
-	setup() {
-		return {
-			onAddClicked() {},
-		};
-	},
+	setup: () => ({
+		onAddClicked() {},
+	}),
 });
 </script>

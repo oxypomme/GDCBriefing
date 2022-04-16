@@ -30,12 +30,14 @@ export default defineComponent({
 	props: {
 		diary: Object,
 	},
-	setup(props) {
+	setup: (props) => {
 		store = useStore();
 		const content = ref(props.diary.name);
 
 		return {
+			// Data
 			content,
+			// Methods
 			onContentChange: (val) => {
 				content.value = val;
 				updateStore(props.diary.key, content.value);

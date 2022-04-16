@@ -7,6 +7,10 @@ import {
 	NLayout,
 	NLayoutSider,
 	NMenu,
+	NTabs,
+	NTabPane,
+	NCode,
+	NConfigProvider,
 } from "naive-ui";
 
 const components = [
@@ -17,6 +21,10 @@ const components = [
 	NInputGroup,
 	NButton,
 	NIcon,
+	NTabs,
+	NTabPane,
+	NCode,
+	NConfigProvider,
 ];
 const naive = create({
 	components,
