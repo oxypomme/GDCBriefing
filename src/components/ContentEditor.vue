@@ -22,9 +22,9 @@ const options = {
 
 let store: Store<State>;
 const updateStore = debounce((key, value) => {
-	store?.commit("setDiaryContent", {
+	store?.dispatch("setDiary", {
 		key,
-		value,
+		content: value,
 	});
 }, 1000);
 

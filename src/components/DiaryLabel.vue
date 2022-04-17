@@ -1,7 +1,7 @@
 <template>
 	<n-input-group>
 		<n-input :value="content" @update:value="onContentChange" />
-		<n-button type="error" @click="onDeletePressed">
+		<n-button type="error" @click="onDeletePressed" :disabled="disabled">
 			<n-icon>
 				<TrashAlt />
 			</n-icon>
@@ -18,9 +18,9 @@ import type { Store } from "vuex";
 
 let store: Store<State>;
 const updateStore = debounce((key, value) => {
-	store?.commit("setDiaryName", {
+	store?.dispatch("setDiary", {
 		key,
-		value,
+		name: value,
 	});
 }, 1000);
 
@@ -30,6 +30,11 @@ export default defineComponent({
 	},
 	props: {
 		diary: Object,
+		disabled: {
+			type: Boolean,
+			required: false,
+			default: false,
+		},
 	},
 	setup: (props) => {
 		store = useStore();
@@ -47,7 +52,7 @@ export default defineComponent({
 			},
 			onDeletePressed: () => {
 				if (props?.diary) {
-					store.commit("deleteDiary", { key: props.diary.key });
+					store.dispatch("deleteDiary", { key: props.diary.key });
 				}
 			},
 		};

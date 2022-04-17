@@ -3,6 +3,8 @@ import type Delta from "quill-delta";
 import { InjectionKey } from "vue";
 import { createStore, Store, useStore as baseUseStore } from "vuex";
 
+const lsKey = "gdcBriefingDiaries";
+
 export type Diary = {
 	name: string;
 	key: number;
@@ -10,11 +12,15 @@ export type Diary = {
 };
 
 const state = {
-	diaries: [] as Diary[],
+	diaries: [{ key: 0, name: "Entrée 0" }] as Diary[],
 	currentDiary: 0,
 };
-
 export type State = typeof state;
+
+const lsDiaries = localStorage.getItem(lsKey);
+if (lsDiaries) {
+	state.diaries = JSON.parse(lsDiaries);
+}
 
 export const key: InjectionKey<Store<State>> = Symbol();
 
@@ -22,33 +28,15 @@ export const store = createStore<State>({
 	state,
 	mutations: {
 		setCurrentDiary(state, { key }: Pick<Diary, "key">) {
-			if (typeof key === "number" && state.diaries[key]) {
+			if (state.diaries[key]) {
 				state.currentDiary = key;
 			}
 		},
-		setDiaryName(
-			state,
-			{ key, value }: Pick<Diary, "key"> & { value: string }
-		) {
-			if (typeof key === "number" && state.diaries[key]) {
-				state.diaries[key].name = value;
-			}
-		},
-		setDiaryContent(
-			state,
-			{ key, value }: Pick<Diary, "key"> & { value: Delta }
-		) {
-			if (typeof key === "number" && state.diaries[key]) {
-				state.diaries[key].content = value;
-			}
-		},
-		addDiary(state) {
-			const index = state.diaries.length;
-			state.diaries.push({
-				key: index,
-				name: `Entrée ${index}`,
-			});
-			state.currentDiary = index;
+		setDiary(state, { key, ...diary }: Partial<Diary> & Pick<Diary, "key">) {
+			state.diaries[key] = {
+				...(state.diaries[key] ?? { key }),
+				...diary,
+			};
 		},
 		deleteDiary(state, { key }: Pick<Diary, "key">) {
 			if (typeof key === "number" && state.diaries[key]) {
@@ -59,7 +47,27 @@ export const store = createStore<State>({
 			}
 		},
 	},
-	actions: {},
+	actions: {
+		saveState({ state }) {
+			localStorage.setItem(lsKey, JSON.stringify(state.diaries));
+		},
+		addDiary({ commit, dispatch, state }) {
+			const index = state.diaries.length;
+			dispatch("setDiary", {
+				key: index,
+				name: `Entrée ${index}`,
+			});
+			commit("setCurrentDiary", { key: index });
+		},
+		setDiary({ commit, dispatch }, payload) {
+			commit("setDiary", payload);
+			dispatch("saveState");
+		},
+		deleteDiary({ commit, dispatch }, payload) {
+			commit("deleteDiary", payload);
+			dispatch("saveState");
+		},
+	},
 	getters: {
 		getDiariesList: (state) =>
 			state.diaries.map(({ name, key }) => ({ name, key })),
@@ -68,8 +76,8 @@ export const store = createStore<State>({
 			getters.getDiariesList[state.currentDiary] ?? {},
 		getCurrentDiaryContent: (state) => {
 			if (state.diaries[state.currentDiary]) {
-				const { key, content, name } = state.diaries[state.currentDiary];
-				return { key, content, name };
+				const { key, content } = state.diaries[state.currentDiary];
+				return { key, content };
 			}
 			return {};
 		},

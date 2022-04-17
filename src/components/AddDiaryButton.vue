@@ -1,5 +1,9 @@
 <template>
-	<n-button @click="onAddClicked" type="primary">
+	<n-button
+		@click="onAddClicked"
+		type="primary"
+		style="display: flex; margin: 0 auto"
+	>
 		<template #icon>
 			<n-icon>
 				<Plus />
@@ -22,7 +26,7 @@ export default defineComponent({
 		const store = useStore();
 		return {
 			onAddClicked() {
-				store.commit("addDiary");
+				store.dispatch("addDiary");
 			},
 		};
 	},

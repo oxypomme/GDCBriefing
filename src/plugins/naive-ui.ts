@@ -3,21 +3,16 @@ import {
 	NButton,
 	NCard,
 	NCode,
-	NConfigProvider,
 	NDivider,
 	NIcon,
 	NInput,
 	NInputGroup,
-	NLayout,
-	NLayoutSider,
 	NMenu,
 	NTabPane,
 	NTabs,
 } from "naive-ui";
 
 const components = [
-	NLayout,
-	NLayoutSider,
 	NMenu,
 	NInput,
 	NInputGroup,
@@ -26,7 +21,6 @@ const components = [
 	NTabs,
 	NTabPane,
 	NCode,
-	NConfigProvider,
 	NDivider,
 	NCard,
 ];

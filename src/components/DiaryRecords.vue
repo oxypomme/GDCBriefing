@@ -21,16 +21,18 @@ export default defineComponent({
 		const store = useStore();
 		return {
 			// Computed
-			diaries: computed(() =>
-				store.getters.getDiariesList.map((d: Diary) => ({
+			diaries: computed(() => {
+				const list: Diary[] = store.getters.getDiariesList;
+				return list.map((d) => ({
 					...d,
 					icon: renderIcon(FileAltRegular),
 					label: () =>
 						h(DiaryLabel, {
 							diary: d,
+							disabled: list.length === 1,
 						}),
-				}))
-			),
+				}));
+			}),
 			currentDiary: computed(() => store.getters.getCurrentDiary),
 			// Methods
 			onDiarySelected: (key: number) => {

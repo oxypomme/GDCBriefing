@@ -1,5 +1,7 @@
 <template>
-	<n-code style="flex: 1" :code="sqf" language="sqf" />
+	<n-card>
+		<n-code style="flex: 1" :code="sqf" language="sqf" />
+	</n-card>
 </template>
 
 <script lang="ts">
