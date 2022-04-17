@@ -1,8 +1,10 @@
 import {
 	create,
 	NButton,
+	NCard,
 	NCode,
 	NConfigProvider,
+	NDivider,
 	NIcon,
 	NInput,
 	NInputGroup,
@@ -25,6 +27,8 @@ const components = [
 	NTabPane,
 	NCode,
 	NConfigProvider,
+	NDivider,
+	NCard,
 ];
 const naive = create({
 	components,

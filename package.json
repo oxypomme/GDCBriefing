@@ -26,10 +26,13 @@
 		"@vue/cli-plugin-vuex": "~4.5.17",
 		"@vue/cli-service": "~4.5.17",
 		"@vue/compiler-sfc": "^3.0.0",
+		"@vue/eslint-config-prettier": "^6.0.0",
 		"@vue/eslint-config-typescript": "^7.0.0",
 		"babel-eslint": "^10.1.0",
 		"eslint": "^6.7.2",
+		"eslint-plugin-prettier": "^3.3.1",
 		"eslint-plugin-vue": "^8.6.0",
+		"prettier": "^2.2.1",
 		"prettier-plugin-organize-imports": "^2.3.4",
 		"typescript": "~4.1.5",
 		"vue-cli-plugin-naive-ui": "^1.0.0"

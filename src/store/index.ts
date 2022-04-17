@@ -6,7 +6,7 @@ import { createStore, Store, useStore as baseUseStore } from "vuex";
 export type Diary = {
 	name: string;
 	key: number;
-	content: Delta | {};
+	content?: Delta;
 };
 
 const state = {
@@ -36,7 +36,7 @@ export const store = createStore<State>({
 		},
 		setDiaryContent(
 			state,
-			{ key, value }: Pick<Diary, "key"> & { value: string }
+			{ key, value }: Pick<Diary, "key"> & { value: Delta }
 		) {
 			if (typeof key === "number" && state.diaries[key]) {
 				state.diaries[key].content = value;
@@ -47,8 +47,8 @@ export const store = createStore<State>({
 			state.diaries.push({
 				key: index,
 				name: `Entrée ${index}`,
-				content: {},
 			});
+			state.currentDiary = index;
 		},
 		deleteDiary(state, { key }: Pick<Diary, "key">) {
 			if (typeof key === "number" && state.diaries[key]) {
@@ -61,13 +61,17 @@ export const store = createStore<State>({
 	},
 	actions: {},
 	getters: {
-		getDiariesList: (state) => state.diaries.map(({ name }) => ({ name })),
+		getDiariesList: (state) =>
+			state.diaries.map(({ name, key }) => ({ name, key })),
 		// Selected Diray
 		getCurrentDiary: (state, getters) =>
 			getters.getDiariesList[state.currentDiary] ?? {},
 		getCurrentDiaryContent: (state) => {
-			const { key, content, name } = state.diaries[state.currentDiary];
-			return { key, content, name };
+			if (state.diaries[state.currentDiary]) {
+				const { key, content, name } = state.diaries[state.currentDiary];
+				return { key, content, name };
+			}
+			return {};
 		},
 		// SQF
 		getSQF: (state) =>
