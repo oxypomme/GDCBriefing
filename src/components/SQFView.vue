@@ -1,8 +1,5 @@
 <template>
 	<n-space vertical>
-		<n-card>
-			<n-code :code="sqf" language="sqf" />
-		</n-card>
 		<n-space>
 			<n-button-group>
 				<n-button ghost type="primary" @click="downloadBriefing">
@@ -46,6 +43,9 @@
 				changements)
 			</n-popconfirm>
 		</n-space>
+		<n-card>
+			<n-code :code="sqf" language="sqf" />
+		</n-card>
 	</n-space>
 </template>
 
