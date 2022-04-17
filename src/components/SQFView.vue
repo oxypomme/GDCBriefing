@@ -39,7 +39,7 @@
 				</template>
 				Cette action supprimera toute les données et est irréversible,
 				voulez-vous continuer ? <br />
-				(un rechargemnt de la page est parfois nécéssaire pour voir les
+				(un rechargement de la page est parfois nécéssaire pour voir les
 				changements)
 			</n-popconfirm>
 		</n-space>
