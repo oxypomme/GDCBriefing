@@ -1,6 +1,6 @@
 <template>
 	<n-card>
-		<n-code style="flex: 1" :code="sqf" language="sqf" />
+		<n-code :code="sqf" language="sqf" />
 	</n-card>
 </template>
 

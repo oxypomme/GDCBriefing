@@ -89,8 +89,8 @@ export const toSQF = (name: string, delta: Delta) => {
 	if (delta?.ops) {
 		for (let i = 0; i < delta.ops.length; i++) {
 			const { insert, attributes } = delta.ops[i];
-			let data = insert;
-			if (typeof data === "string") {
+			if (typeof insert === "string") {
+				let data = insert;
 				if (!attributes?.header) {
 					data = data.replaceAll("\n", "\n<br/>");
 				}
@@ -102,7 +102,7 @@ export const toSQF = (name: string, delta: Delta) => {
 						data = renderXMLTag(key, attrs, data);
 					}
 				}
-				sqf += insert;
+				sqf += data;
 			} else {
 				console.error(
 					"Type of insert: %s (value: %s)",

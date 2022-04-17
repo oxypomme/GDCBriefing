@@ -12,6 +12,13 @@
 				<n-tab-pane name="sqf" tab="SQF">
 					<SQFView />
 				</n-tab-pane>
+				<n-tab-pane
+					v-if="unsaved"
+					name="nsaved"
+					tab="Modifications non enregistrées"
+					disabled
+				>
+				</n-tab-pane>
 			</n-tabs>
 		</n-layout>
 	</n-layout>
@@ -43,6 +50,7 @@ export default defineComponent({
 			isCurrentDiary: computed(
 				() => !isNaN(+store.getters.getCurrentDiary?.key)
 			),
+			unsaved: computed(() => store.getters.getUnsaved),
 		};
 	},
 });

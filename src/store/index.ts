@@ -14,6 +14,7 @@ export type Diary = {
 const state = {
 	diaries: [{ key: 0, name: "Entrée 0" }] as Diary[],
 	currentDiary: 0,
+	editPending: false,
 };
 export type State = typeof state;
 
@@ -42,9 +43,12 @@ export const store = createStore<State>({
 			if (typeof key === "number" && state.diaries[key]) {
 				state.diaries.splice(key);
 				if (state.currentDiary === key) {
-					state.currentDiary = 0;
+					state.currentDiary = key - 1;
 				}
 			}
+		},
+		setUnsavedStatus(state, { status }: { status: boolean }) {
+			state.editPending = status;
 		},
 	},
 	actions: {
@@ -62,6 +66,7 @@ export const store = createStore<State>({
 		setDiary({ commit, dispatch }, payload) {
 			commit("setDiary", payload);
 			dispatch("saveState");
+			commit("setUnsavedStatus", { status: false });
 		},
 		deleteDiary({ commit, dispatch }, payload) {
 			commit("deleteDiary", payload);
@@ -83,8 +88,12 @@ export const store = createStore<State>({
 		},
 		// SQF
 		getSQF: (state) =>
-			state.diaries.map(({ name, content }) => toSQF(name, content as Delta)),
-		getCurrentDiarySQF: (state, getters) => getters.getSQF[state.currentDiary],
+			state.diaries
+				.map(({ name, content }) => toSQF(name, content as Delta))
+				.reverse(),
+		getCurrentDiarySQF: (state, getters) =>
+			getters.getSQF[state.diaries.length - 1 - state.currentDiary],
+		getUnsaved: (state) => state.editPending,
 	},
 });
 

@@ -47,6 +47,7 @@ export default defineComponent({
 			onContentChange: (val: string) => {
 				if (props?.diary) {
 					content.value = val;
+					store.commit("setUnsavedStatus", { status: true });
 					updateStore(props.diary.key, content.value);
 				}
 			},
