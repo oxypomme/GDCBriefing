@@ -1,5 +1,6 @@
 import { toSQF } from "@/js/SQFconverter";
 import type Delta from "quill-delta";
+import { v4 as uuidv4 } from "uuid";
 import { InjectionKey } from "vue";
 import { createStore, Store, useStore as baseUseStore } from "vuex";
 
@@ -7,17 +8,19 @@ const lsKey = "gdcBriefingDiaries";
 
 export type Diary = {
 	name: string;
-	key: number;
+	key: string;
 	content?: Delta;
 };
 
-const state = {
-	diaries: [{ key: 0, name: "Entrée 0" }] as Diary[],
+const firstUUID = uuidv4();
+const initialState = {
+	diaries: [{ key: firstUUID, name: "Entrée 0" }] as Diary[],
 	currentDiary: 0,
 	editPending: false,
 };
-export type State = typeof state;
+export type State = typeof initialState;
 
+const state = { ...initialState };
 const lsDiaries = localStorage.getItem(lsKey);
 if (lsDiaries) {
 	state.diaries = JSON.parse(lsDiaries);
@@ -29,26 +32,38 @@ export const store = createStore<State>({
 	state,
 	mutations: {
 		setCurrentDiary(state, { key }: Pick<Diary, "key">) {
-			if (state.diaries[key]) {
-				state.currentDiary = key;
+			const index = state.diaries.findIndex(({ key: k }) => k === key);
+			if (index >= 0) {
+				state.currentDiary = index;
 			}
 		},
 		setDiary(state, { key, ...diary }: Partial<Diary> & Pick<Diary, "key">) {
-			state.diaries[key] = {
-				...(state.diaries[key] ?? { key }),
+			let index = state.diaries.findIndex(({ key: k }) => k === key);
+			if (index < 0) {
+				index = state.diaries.length;
+			}
+
+			state.diaries[index] = {
+				...(state.diaries[index] ?? { key }),
 				...diary,
 			};
 		},
 		deleteDiary(state, { key }: Pick<Diary, "key">) {
-			if (typeof key === "number" && state.diaries[key]) {
-				state.diaries.splice(key);
-				if (state.currentDiary === key) {
-					state.currentDiary = key - 1;
+			const index = state.diaries.findIndex(({ key: k }) => k === key);
+			if (index >= 0) {
+				state.diaries.splice(index, 1);
+				if (state.currentDiary === index) {
+					state.currentDiary = index - 1;
 				}
 			}
 		},
 		setUnsavedStatus(state, { status }: { status: boolean }) {
 			state.editPending = status;
+		},
+		clearData(state) {
+			state.currentDiary = initialState.currentDiary;
+			state.diaries = initialState.diaries;
+			state.editPending = initialState.editPending;
 		},
 	},
 	actions: {
@@ -56,12 +71,12 @@ export const store = createStore<State>({
 			localStorage.setItem(lsKey, JSON.stringify(state.diaries));
 		},
 		addDiary({ commit, dispatch, state }) {
-			const index = state.diaries.length;
+			const key = uuidv4();
 			dispatch("setDiary", {
-				key: index,
-				name: `Entrée ${index}`,
+				key,
+				name: `Entrée ${state.diaries.length}`,
 			});
-			commit("setCurrentDiary", { key: index });
+			commit("setCurrentDiary", { key });
 		},
 		setDiary({ commit, dispatch }, payload) {
 			commit("setDiary", payload);
@@ -70,6 +85,10 @@ export const store = createStore<State>({
 		},
 		deleteDiary({ commit, dispatch }, payload) {
 			commit("deleteDiary", payload);
+			dispatch("saveState");
+		},
+		clearData({ commit, dispatch }) {
+			commit("clearData");
 			dispatch("saveState");
 		},
 	},
@@ -88,11 +107,8 @@ export const store = createStore<State>({
 		},
 		// SQF
 		getSQF: (state) =>
-			state.diaries
-				.map(({ name, content }) => toSQF(name, content as Delta))
-				.reverse(),
-		getCurrentDiarySQF: (state, getters) =>
-			getters.getSQF[state.diaries.length - 1 - state.currentDiary],
+			state.diaries.map(({ name, content }) => toSQF(name, content as Delta)),
+		getCurrentDiarySQF: (state, getters) => getters.getSQF[state.currentDiary],
 		getUnsaved: (state) => state.editPending,
 	},
 });

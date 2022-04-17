@@ -1,7 +1,7 @@
 <template>
 	<n-input-group>
 		<n-input :value="content" @update:value="onContentChange" />
-		<n-button type="error" @click="onDeletePressed" :disabled="disabled">
+		<n-button ghost type="error" @click="onDeletePressed" :disabled="disabled">
 			<n-icon>
 				<TrashAlt />
 			</n-icon>
@@ -17,8 +17,8 @@ import { defineComponent, ref } from "vue";
 import type { Store } from "vuex";
 
 let store: Store<State>;
-const updateStore = debounce((key, value) => {
-	store?.dispatch("setDiary", {
+const updateStore = debounce(async (key, value) => {
+	await store?.dispatch("setDiary", {
 		key,
 		name: value,
 	});

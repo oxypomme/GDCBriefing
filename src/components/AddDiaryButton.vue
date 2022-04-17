@@ -1,6 +1,7 @@
 <template>
 	<n-button
 		@click="onAddClicked"
+		ghost
 		type="primary"
 		style="display: flex; margin: 0 auto"
 	>

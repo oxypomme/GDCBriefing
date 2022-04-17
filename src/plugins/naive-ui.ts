@@ -8,6 +8,7 @@ import {
 	NInput,
 	NInputGroup,
 	NMenu,
+	NSpace,
 	NTabPane,
 	NTabs,
 } from "naive-ui";
@@ -23,6 +24,7 @@ const components = [
 	NCode,
 	NDivider,
 	NCard,
+	NSpace,
 ];
 const naive = create({
 	components,

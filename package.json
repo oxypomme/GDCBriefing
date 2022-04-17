@@ -10,13 +10,17 @@
 	"dependencies": {
 		"@vueup/vue-quill": "^1.0.0-beta.8",
 		"core-js": "^3.6.5",
+		"file-saver": "^2.0.5",
 		"highlight.js": "^11.5.1",
 		"lodash": "^4.17.21",
 		"naive-ui": "^2.11.4",
+		"uuid": "^8.3.2",
 		"vue": "^3.0.0",
 		"vuex": "^4.0.0-0"
 	},
 	"devDependencies": {
+		"@types/file-saver": "^2.0.5",
+		"@types/uuid": "^8.3.4",
 		"@typescript-eslint/eslint-plugin": "^5.19.0",
 		"@typescript-eslint/parser": "^5.19.0",
 		"@vicons/fa": "^0.12.0",

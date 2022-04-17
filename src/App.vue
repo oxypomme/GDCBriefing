@@ -47,9 +47,7 @@ export default defineComponent({
 
 		return {
 			// Computed
-			isCurrentDiary: computed(
-				() => !isNaN(+store.getters.getCurrentDiary?.key)
-			),
+			isCurrentDiary: computed(() => store.getters.getCurrentDiary?.key),
 			unsaved: computed(() => store.getters.getUnsaved),
 		};
 	},
