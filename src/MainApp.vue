@@ -5,17 +5,14 @@
 </template>
 
 <script lang="ts">
-import hljs from "highlight.js/lib/core";
-import sqf from "highlight.js/lib/languages/sqf";
-import { darkTheme, NConfigProvider } from "naive-ui";
+import { darkTheme } from "naive-ui";
 import { computed, defineComponent } from "vue";
 import App from "./App.vue";
+import hljs from "./plugins/hljs";
 import { useStore } from "./store";
 
-hljs.registerLanguage("sqf", sqf);
-
 export default defineComponent({
-	components: { App, NConfigProvider },
+	components: { App },
 	setup: () => {
 		const store = useStore();
 

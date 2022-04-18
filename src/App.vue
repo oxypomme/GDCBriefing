@@ -30,7 +30,6 @@
 
 <script lang="ts">
 import { useStore } from "@/store";
-import { NLayout, NLayoutSider } from "naive-ui";
 import { computed, defineComponent } from "vue";
 import AddDiaryButton from "./components/AddDiaryButton.vue";
 import ContentEditor from "./components/ContentEditor.vue";
@@ -45,8 +44,6 @@ export default defineComponent({
 		SQFView,
 		SettingsPane,
 		AddDiaryButton,
-		NLayout,
-		NLayoutSider,
 	},
 	setup: () => {
 		const store = useStore();

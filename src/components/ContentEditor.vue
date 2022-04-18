@@ -1,14 +1,14 @@
 <template>
-	<n-grid x-gap="12" :cols="2">
-		<n-gi style="height: fit-content">
+	<n-grid x-gap="12" :cols="2" class="content-grid">
+		<n-gi>
 			<quill-editor
 				ref="editor"
 				@textChange="onTextChange"
 				:options="options"
 			></quill-editor>
 		</n-gi>
-		<n-gi style="height: 100%">
-			<n-card style="height: 100%">
+		<n-gi>
+			<n-card>
 				<n-scrollbar>
 					<n-code :code="sqf" language="sqf" />
 				</n-scrollbar>
@@ -22,7 +22,6 @@ import { State, useStore } from "@/store";
 import type { Diary } from "@/store/types";
 import type { Delta, Quill } from "@vueup/vue-quill";
 import { debounce } from "lodash";
-import { NGi, NGrid, NScrollbar } from "naive-ui";
 import { computed, defineComponent, onMounted, Ref, ref, watch } from "vue";
 import type { Store } from "vuex";
 
@@ -56,7 +55,6 @@ const updateStore = debounce((key, value) => {
 }, 1000);
 
 export default defineComponent({
-	components: { NGrid, NGi, NScrollbar },
 	setup: () => {
 		store = useStore();
 		const diary = computed(() => store.getters.getCurrentDiary as Diary);
@@ -89,3 +87,16 @@ export default defineComponent({
 	},
 });
 </script>
+
+<style lang="css" scoped>
+.content-grid {
+	min-height: 215px;
+}
+.content-grid > * {
+	display: flex;
+	flex-direction: column;
+}
+.content-grid > * > .n-card {
+	height: 100%;
+}
+</style>

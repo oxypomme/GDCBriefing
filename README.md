@@ -25,6 +25,7 @@ Intéressé ? [Aller jetez un oeil](https://oxypomme.github.io/GDCBriefing/), c'
 - typescript
 - vue3
 - naive-ui
+- quill
 
 ### Development
 
