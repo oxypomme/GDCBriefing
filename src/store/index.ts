@@ -7,14 +7,19 @@ import { createStore, Store, useStore as baseUseStore } from "vuex";
 import initialState from "./intitial";
 import type { Diary } from "./types";
 
-const lsKey = "gdcBriefingDiaries";
-
-export type State = typeof initialState;
+const lsKey = "gdcBriefing";
 
 const state = cloneDeep(initialState);
-const lsDiaries = localStorage.getItem(lsKey);
+export type State = typeof initialState;
+
+const lsDiaries = localStorage.getItem(lsKey + "Diaries");
 if (lsDiaries) {
 	state.diaries = JSON.parse(lsDiaries);
+}
+
+const lsSettings = localStorage.getItem(lsKey + "Settings");
+if (lsSettings) {
+	state.settings = JSON.parse(lsSettings);
 }
 
 export const key: InjectionKey<Store<State>> = Symbol();
@@ -56,12 +61,21 @@ export const store = createStore<State>({
 			state.diaries = initialState.diaries;
 			state.editPending = initialState.editPending;
 		},
+		setSettings: (state, settings: State["settings"]) => {
+			state.settings = {
+				...state.settings,
+				...settings,
+			};
+		},
 	},
 	actions: {
-		saveState({ state }) {
-			localStorage.setItem(lsKey, JSON.stringify(state.diaries));
+		saveState: ({ state }) => {
+			localStorage.setItem(lsKey + "Diaries", JSON.stringify(state.diaries));
 		},
-		addDiary({ commit, dispatch, state }) {
+		saveSettings: ({ state }) => {
+			localStorage.setItem(lsKey + "Settings", JSON.stringify(state.settings));
+		},
+		addDiary: ({ commit, dispatch, state }) => {
 			const key = uuidv4();
 			dispatch("setDiary", {
 				key,
@@ -69,18 +83,22 @@ export const store = createStore<State>({
 			});
 			commit("setCurrentDiary", { key });
 		},
-		setDiary({ commit, dispatch }, payload) {
+		setDiary: ({ commit, dispatch }, payload) => {
 			commit("setDiary", payload);
 			dispatch("saveState");
 			commit("setUnsavedStatus", { status: false });
 		},
-		deleteDiary({ commit, dispatch }, payload) {
+		deleteDiary: ({ commit, dispatch }, payload) => {
 			commit("deleteDiary", payload);
 			dispatch("saveState");
 		},
-		clearData({ commit, dispatch }) {
+		clearData: ({ commit, dispatch }) => {
 			commit("clearData");
 			dispatch("saveState");
+		},
+		setSettings: ({ commit, dispatch }, payload) => {
+			commit("setSettings", payload);
+			dispatch("saveSettings");
 		},
 	},
 	getters: {
@@ -101,6 +119,8 @@ export const store = createStore<State>({
 			state.diaries.map(({ name, content }) => toSQF(name, content as Delta)),
 		getCurrentDiarySQF: (state, getters) => getters.getSQF[state.currentDiary],
 		getUnsaved: (state) => state.editPending,
+		// Settings
+		getSettings: (state) => state.settings,
 	},
 });
 

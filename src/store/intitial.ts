@@ -21,4 +21,7 @@ export default {
 	diaries,
 	currentDiary: 0,
 	editPending: false,
+	settings: {
+		isDark: false,
+	},
 };
