@@ -7,7 +7,8 @@
 </template>
 
 <script lang="ts">
-import { Diary, useStore } from "@/store";
+import { useStore } from "@/store";
+import type { Diary } from "@/store/types";
 import { FileAltRegular } from "@vicons/fa";
 import { NIcon } from "naive-ui";
 import { Component, computed, defineComponent, h } from "vue";

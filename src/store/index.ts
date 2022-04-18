@@ -1,26 +1,17 @@
 import { toSQF } from "@/js/SQFconverter";
+import { cloneDeep } from "lodash";
 import type Delta from "quill-delta";
 import { v4 as uuidv4 } from "uuid";
 import { InjectionKey } from "vue";
 import { createStore, Store, useStore as baseUseStore } from "vuex";
+import initialState from "./intitial";
+import type { Diary } from "./types";
 
 const lsKey = "gdcBriefingDiaries";
 
-export type Diary = {
-	name: string;
-	key: string;
-	content?: Delta;
-};
-
-const firstUUID = uuidv4();
-const initialState = {
-	diaries: [{ key: firstUUID, name: "Entrée 0" }] as Diary[],
-	currentDiary: 0,
-	editPending: false,
-};
 export type State = typeof initialState;
 
-const state = { ...initialState };
+const state = cloneDeep(initialState);
 const lsDiaries = localStorage.getItem(lsKey);
 if (lsDiaries) {
 	state.diaries = JSON.parse(lsDiaries);

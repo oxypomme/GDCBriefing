@@ -18,7 +18,8 @@
 </template>
 
 <script lang="ts">
-import { Diary, State, useStore } from "@/store";
+import { State, useStore } from "@/store";
+import type { Diary } from "@/store/types";
 import type { Quill } from "@vueup/vue-quill";
 import { debounce } from "lodash";
 import { NGi, NGrid, NScrollbar } from "naive-ui";
