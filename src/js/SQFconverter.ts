@@ -92,7 +92,7 @@ export const toSQF = (name: string, delta: Delta) => {
 			if (typeof insert === "string") {
 				let data = insert;
 				if (!attributes?.header) {
-					data = data.replaceAll("\n", "\n<br/>");
+					data = data.replaceAll("\n", "\n\t<br/>");
 				}
 
 				if (attributes) {
@@ -114,5 +114,5 @@ export const toSQF = (name: string, delta: Delta) => {
 		// Removing last \n
 		sqf = sqf.replace(/\n<br\/>$/, "");
 	}
-	return sqf + '"]];';
+	return sqf + '\n"]];';
 };

@@ -102,18 +102,9 @@ export const store = createStore<State>({
 		},
 	},
 	getters: {
-		getDiariesList: (state) =>
-			state.diaries.map(({ name, key }) => ({ name, key })),
+		getDiaries: (state) => state.diaries,
 		// Selected Diray
-		getCurrentDiary: (state, getters) =>
-			getters.getDiariesList[state.currentDiary] ?? {},
-		getCurrentDiaryContent: (state) => {
-			if (state.diaries[state.currentDiary]) {
-				const { key, content } = state.diaries[state.currentDiary];
-				return { key, content };
-			}
-			return {};
-		},
+		getCurrentDiary: (state) => state.diaries[state.currentDiary] ?? {},
 		// SQF
 		getSQF: (state) =>
 			state.diaries.map(({ name, content }) => toSQF(name, content as Delta)),

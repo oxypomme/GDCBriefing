@@ -3,7 +3,7 @@
 		<n-gi style="height: fit-content">
 			<quill-editor
 				ref="editor"
-				v-model:content="content"
+				@textChange="onTextChange"
 				:options="options"
 			></quill-editor>
 		</n-gi>
@@ -20,15 +20,18 @@
 <script lang="ts">
 import { State, useStore } from "@/store";
 import type { Diary } from "@/store/types";
-import type { Quill } from "@vueup/vue-quill";
+import type { Delta, Quill } from "@vueup/vue-quill";
 import { debounce } from "lodash";
 import { NGi, NGrid, NScrollbar } from "naive-ui";
-import { computed, defineComponent, Ref, ref, watch } from "vue";
+import { computed, defineComponent, onMounted, Ref, ref, watch } from "vue";
 import type { Store } from "vuex";
 
 // quill options
 const options = {
 	modules: {
+		history: {
+			userOnly: true,
+		},
 		toolbar: [
 			{ color: [] },
 			// { font: [] },
@@ -36,6 +39,12 @@ const options = {
 			{ size: [] },
 		],
 	},
+};
+// quill types
+type TextChangeEvent = {
+	delta: Delta;
+	oldContents: Delta;
+	source: "api" | "user" | "silent";
 };
 
 let store: Store<State>;
@@ -50,48 +59,30 @@ export default defineComponent({
 	components: { NGrid, NGi, NScrollbar },
 	setup: () => {
 		store = useStore();
-		const diary = computed(
-			() =>
-				store.getters.getCurrentDiaryContent as Pick<Diary, "key" | "content">
-		);
+		const diary = computed(() => store.getters.getCurrentDiary as Diary);
 		const sqf = computed(() => store.getters.getCurrentDiarySQF);
 
-		let diaryLock = false;
-		let contentLock = false;
-		// Update editor when current diary is changed
 		const editor: Ref<Quill> = ref(null);
-		watch(diary, (newValue) => {
-			if (!diaryLock) {
-				// Avoiding store updates on current diary change
-				contentLock = true;
-				// Set content of the editor
-				editor.value.setContents(newValue.content, "silent");
-				// Re-Allowing store updates
-				contentLock = false;
-			} else {
-				// Re-Allowing store updates after content change
-				diaryLock = false;
-			}
-		});
-
-		const content = ref(diary.value.content);
-		// Update store when content changes
-		watch(content, async (newValue) => {
-			if (diary.value && !contentLock) {
-				store.commit("setUnsavedStatus", { status: true });
-				// Avoiding content update when useless
-				diaryLock = true;
-				// Update store
-				updateStore(diary.value.key, newValue);
-			}
-		});
+		// Update editor when current diary is changed
+		const updateContent = () => {
+			editor.value.setContents(diary.value.content, "silent");
+		};
+		watch(diary, updateContent);
+		// Update editor when component is mounted
+		onMounted(updateContent);
 
 		return {
 			// Data
 			options,
-			content,
 			// Computed
 			sqf,
+			// Methods
+			onTextChange: ({ source }: TextChangeEvent) => {
+				// Update store when content changes is made by user
+				if (source === "user") {
+					updateStore(diary.value.key, editor.value.getContents());
+				}
+			},
 			// Refs
 			editor,
 		};
